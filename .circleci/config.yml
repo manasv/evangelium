@@ -1,0 +1,45 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: swift:5.0.3
+    steps:
+      - run:
+          name: Clone Data Repo
+          working_directory: ~/workdir
+          command: |
+            git clone --single-branch --branch api-data https://${EVANGELIUM_KEY}@github.com/manasv/Evangelium.git api-data
+      - checkout
+      - run: 
+          name: Run code
+          command: swift run
+      - run:
+          name: Copy new data to API Repo Folder
+          command: |
+            cp -rf data/* ~/workdir/api-data/data/
+      - run:
+          name: Push to repo
+          working_directory: ~/workdir/api-data
+          command: |
+            git config credential.helper 'cache --timeout=120'
+            git config user.email "manasan93@gmail.com"
+            git config user.name "Manuel Sánchez"
+            git add data
+            git commit --allow-empty -m "Updated Via CircleCI -- Automated"
+            # Push quietly to prevent showing the token in log
+            git push -q https://${EVANGELIUM_KEY}@github.com/manasv/Evangelium.git api-data
+
+workflows:
+  version: 2
+
+  weekly_build:
+    triggers:
+      - schedule:
+          cron: "* * * * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - build

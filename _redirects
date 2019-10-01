@@ -1,0 +1,8 @@
+/ https://github.com/manasv/SwiftyEvangelium 301
+/api/es/days/:date /data/es/:date.json 200
+/api/en/days/:date /data/en/:date.json 200
+/api/fr/days/:date /data/fr/:date.json 200
+/api/it/days/:date /data/it/:date.json 200
+/api/kr/days/:date /data/kr/:date.json 200
+/api/pt/days/:date /data/pt/:date.json 200
+/api/de/days/:date /data/de/:date.json 200
