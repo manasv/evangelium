@@ -30,7 +30,6 @@ class FileFetcher {
     func download(for language: Language, completion: @escaping () -> Void) {
         DispatchQueue.concurrentPerform(iterations: 7) { _ in
             let readingDate = try? dateManager.formattedDate()
-            print(readingDate ?? "")
             dispatchGroup.enter()
             requester.fecth(for: language.rawValue, in: readingDate ?? "") { result in
                 switch result {
