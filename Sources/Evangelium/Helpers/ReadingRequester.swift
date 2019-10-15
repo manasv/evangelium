@@ -20,6 +20,8 @@ public struct ReadingRequester {
             return
         }
         
+        print("Fetching \(readingsURL)")
+
         // Sending request to the server.
         let task = URLSession.shared.dataTask(with: readingsURL) { [date] data, response, error in
             if let data = data,
