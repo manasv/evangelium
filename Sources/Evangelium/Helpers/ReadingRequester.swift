@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import FoundationNetworking
 
 typealias ReadingResult = (Result<ReadingsData, Error>) -> Void
 
