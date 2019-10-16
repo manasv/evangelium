@@ -3,7 +3,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: swift:5.0.3
+      - image: swift:5.1
     steps:
       - run:
           name: Clone Data Branch
