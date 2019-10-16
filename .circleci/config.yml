@@ -3,7 +3,8 @@ version: 2
 jobs:
   build:
     docker:
-      - image: swift:5.1.1
+      - image: circleci/swift:5.1
+    parallelism: 3
     steps:
       - run:
           name: Clone Data Branch
