@@ -8,7 +8,6 @@ install:
     - eval "$(curl -sL https://swiftenv.fuller.li/install.sh)"
 script:
     - git clone --single-branch --branch api-data https://${EVANGELIUM_KEY}@github.com/manasv/Evangelium.git api-data
-    - git clone --single-branch --branch master https://${EVANGELIUM_KEY}@github.com/manasv/Evangelium.git .
     - swift run
     - cp -rf data/* api-data/data/
     - cd api-data
@@ -16,5 +15,5 @@ script:
     - git config user.email "manasan93@gmail.com"
     - git config user.name "Manuel Sánchez"
     - git add data
-    - git commit --allow-empty -m "Updated Via CircleCI -- Automated"
+    - git commit --allow-empty -m "Updated Via Travis -- Automated"
     - git push -q https://${EVANGELIUM_KEY}@github.com/manasv/Evangelium.git api-data
