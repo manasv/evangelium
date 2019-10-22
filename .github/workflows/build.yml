@@ -19,8 +19,9 @@ jobs:
       - name: Run code
         run: swift run
       - name: Copy new data to API Repo Folder
-        run: |
-          cp -rf data/* ~/workdir/api-data/data/
+        uses: jcblw/bash@master
+        with:
+          args: "cp -rf data/* ~/workdir/api-data/data/"          
       - name: Push to repo
         working-directory: ~/workdir/api-data
         run: |
