@@ -9,12 +9,12 @@ jobs:
     runs-on: macOS-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@master
       - name: Clone Data Branch
         working-directory: ~/workdir
         run: |
           git clone --single-branch --branch api-data https://${EVANGELIUM_KEY}@github.com/manasv/Evangelium.git api-data
+      - name: Checkout
+        uses: actions/checkout@master
       - name: Run code
         run: swift run
       - name: Copy new data to API Repo Folder
