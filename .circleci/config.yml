@@ -35,7 +35,6 @@ workflows:
   weekly_build:
     triggers:
       - schedule:
-          # cron: "0 0 * * 0"
           cron: "* * * * *"
           filters:
             branches:
