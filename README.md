@@ -3,8 +3,8 @@
 <a href="https://app.netlify.com/sites/evangelium/deploys">
         <img src="https://api.netlify.com/api/v1/badges/36ba5654-56c5-47c8-91fc-ad07609975e6/deploy-status" alt="Netlify Status" />
 </a>
-<a href="https://travis-ci.org/manasv/Evangelium/">
-        <img src="https://travis-ci.org/manasv/Evangelium.svg?branch=master" alt="TravisCI Status" />
+<a href="https://circleci.com/gh/manasv/Evangelium">
+        <img src="https://circleci.com/gh/manasv/Evangelium.svg?style=svg" alt="CircleCI Status" />
 </a>
 <p>
 
