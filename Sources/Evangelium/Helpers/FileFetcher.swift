@@ -6,47 +6,31 @@
 //
 
 import Foundation
-
+import PromiseKit
 
 class FileFetcher {
-    
-    private let dispatchGroup = DispatchGroup()
-    
     var dateManager: DateManager
-    
     let requester: ReadingRequester
-    
     let fileManager: FileManager
     
-    init(dateManager: DateManager,
-         requester: ReadingRequester,
-         fileManager: FileManager) {
+    init(dateManager: DateManager, requester: ReadingRequester, fileManager: FileManager) {
         self.dateManager = dateManager
         self.requester = requester
         self.fileManager = fileManager
     }
     
-    
-    func download(for language: Language, completion: @escaping () -> Void) {
-        DispatchQueue.concurrentPerform(iterations: 7) { _ in
-            let readingDate = try? dateManager.formattedDate()
-            dispatchGroup.enter()
-            requester.fecth(for: language.rawValue, in: readingDate ?? "") { result in
-                switch result {
-                case .success(let reading):
-                    self.fileManager.write(data: reading, languageFolder: language, filename: reading.date ?? "")
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    
-                }
-                self.dispatchGroup.leave()
+    func download(for language: Language) {
+        let readingDate = try? dateManager.formattedDate()
+        
+        for _ in 0 ..< 7 {
+            requester.fetch(for: language.rawValue, in: readingDate ?? "").done { reading in
+                self.fileManager.write(data: reading, languageFolder: language, filename: reading.date ?? "")
+            }.catch { error in
+                print(error.localizedDescription)
             }
-            dateManager.next()
+            self.dateManager.next()
         }
         
-        dispatchGroup.notify(queue: .main) { [weak self] in
-            self?.dateManager.reset()
-            completion()
-        }
+        self.dateManager.reset()
     }
 }
