@@ -24,18 +24,30 @@ class FileFetcher: FileFetcherProtocol {
     
     func download(from promises: [ReadingPromise]) -> Promise<Void> {
         return Promise { seal in
+            var foo = Promise()
             
             for readingPromise in promises {
-                readingPromise.promise.get { reading in
-                    if let date = reading.date {
-                       self.fileManager.write(data: reading, languageFolder: readingPromise.language, filename: date)
+                foo = foo.then { _ in
+                    readingPromise.promise.then { reading -> Promise<Void> in
+                        if let date = reading.date {
+                            self.fileManager.write(data: reading, languageFolder: readingPromise.language, filename: date)
+                        }
+                        return Promise { seal in
+                            seal.fulfill(Void())
+                        }
                     }
-                }.done { _ in
-                    seal.fulfill(Void())
-                }.catch { error in
-                    seal.reject(error)
                 }
+            }
+            foo.done { _ in
+                seal.fulfill(Void())
+            }.catch { error in
+                seal.reject(error)
             }
         }
     }
 }
+//readingPromise.promise.then { reading  in
+//    if let date = reading.date {
+//       self.fileManager.write(data: reading, languageFolder: readingPromise.language, filename: date)
+//    }
+//}
