@@ -29,13 +29,18 @@ jobs:
             git commit --allow-empty -m "Updated Via CircleCI -- Automated"
             # Push quietly to prevent showing the token in log
             git push -q https://${EVANGELIUM_KEY}@github.com/manasv/Evangelium.git api-data
+      - run:
+          name: Upload Coverage
+          working_directory: ~/workdir
+          command: |
+            bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}          
 workflows:
   version: 2
 
   weekly_build:
     triggers:
       - schedule:
-          cron: "0 0 * * 0"
+          cron: "* * * * *"
           filters:
             branches:
               only:
