@@ -1,14 +1,17 @@
 //
-//  File.swift
-//  
+//  FileFetcher.swift
 //
-//  Created by Gustavo Campos on 10/1/19.
+//  Created by Manuel Sánchez on 12/10/19.
 //
 
 import Foundation
 import PromiseKit
 
-class FileFetcher {
+protocol FileFetcherProtocol {
+    func download(from promises: [ReadingPromise]) -> Promise<Void>
+}
+
+class FileFetcher: FileFetcherProtocol {
     var dateManager: DateManager
     let requester: ReadingRequester
     let fileManager: FileManager
@@ -19,18 +22,20 @@ class FileFetcher {
         self.fileManager = fileManager
     }
     
-    func download(for language: Language) {
-        let readingDate = try? dateManager.formattedDate()
-        
-        for _ in 0 ..< 7 {
-            requester.fetch(for: language.rawValue, in: readingDate ?? "").done { reading in
-                self.fileManager.write(data: reading, languageFolder: language, filename: reading.date ?? "")
-            }.catch { error in
-                print(error.localizedDescription)
+    func download(from promises: [ReadingPromise]) -> Promise<Void> {
+        return Promise { seal in
+            
+            for readingPromise in promises {
+                readingPromise.promise.get { reading in
+                    if let date = reading.date {
+                       self.fileManager.write(data: reading, languageFolder: readingPromise.language, filename: date)
+                    }
+                }.done { _ in
+                    seal.fulfill(Void())
+                }.catch { error in
+                    seal.reject(error)
+                }
             }
-            self.dateManager.next()
         }
-        
-        self.dateManager.reset()
     }
 }

@@ -8,19 +8,20 @@
 import Foundation
 import PromiseKit
 
-typealias ReadingResult = (Swift.Result<ReadingsData, Error>) -> Void
+protocol RequesterProtocol {
+    func fetch(for language: String, in date: String) -> Promise<ReadingsData>
+}
 
-public struct ReadingRequester {
+public struct ReadingRequester: RequesterProtocol {
     func fetch(for language: String, in date: String) -> Promise<ReadingsData> {
         return Promise { seal in
             let decoder = JSONDecoder()
             let path = "/\(language)/days/\(date)/readings"
             
             guard let readingsURL = URL(string: "\(Constants.baseURL)\(path)") else {
+                seal.reject(CustomError.urlBuildError)
                 return
             }
-            
-            print("Fetching \(readingsURL)")
             
             URLSession.shared.dataTask(with: readingsURL) { data, _, error in
                 if let data = data,
