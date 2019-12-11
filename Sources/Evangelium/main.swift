@@ -1,28 +1,28 @@
 import Foundation
-import Dispatch
+import PromiseKit
 
 let requester = ReadingRequester()
 let fileManager = FileManager()
-
 let dateManager = DateManager()
 
-let dispatchGroup = DispatchGroup()
+let languages = Language.allCases
 
-let languages =  Language.allCases
+let fileFetcher = FileFetcher(dateManager: dateManager, requester: requester, fileManager: fileManager)
+let requestBuilder = ReadingsRequestBuilder(dateManager: dateManager, requester: requester)
+var readingPromises = [ReadingPromise]()
 
-DispatchQueue.concurrentPerform(iterations: languages.count) { index in
-    let fileFetcher = FileFetcher(dateManager: dateManager,
-                                  requester: requester,
-                                  fileManager: fileManager)
-    
-    dispatchGroup.enter()
-    fileFetcher.download(for: languages[index]) {
-        dispatchGroup.leave()
+for language in languages {
+    do {
+        readingPromises += try requestBuilder.createPromises(for: language)
+    } catch {
+        print(error.localizedDescription)
     }
 }
 
-dispatchGroup.notify(queue: .main) {
+fileFetcher.download(from: readingPromises).done {
     exit(0)
+}.catch { error in
+    print(error.localizedDescription)
 }
 
 RunLoop.main.run()

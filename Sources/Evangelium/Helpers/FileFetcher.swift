@@ -1,52 +1,48 @@
 //
-//  File.swift
-//  
+//  FileFetcher.swift
 //
-//  Created by Gustavo Campos on 10/1/19.
+//  Created by Manuel Sánchez on 12/10/19.
 //
 
 import Foundation
+import PromiseKit
 
+protocol FileFetcherProtocol {
+    func download(from promises: [ReadingPromise]) -> Promise<Void>
+}
 
-class FileFetcher {
-    
-    private let dispatchGroup = DispatchGroup()
-    
+class FileFetcher: FileFetcherProtocol {
     var dateManager: DateManager
-    
     let requester: ReadingRequester
-    
     let fileManager: FileManager
     
-    init(dateManager: DateManager,
-         requester: ReadingRequester,
-         fileManager: FileManager) {
+    init(dateManager: DateManager, requester: ReadingRequester, fileManager: FileManager) {
         self.dateManager = dateManager
         self.requester = requester
         self.fileManager = fileManager
     }
     
-    
-    func download(for language: Language, completion: @escaping () -> Void) {
-        DispatchQueue.concurrentPerform(iterations: 7) { _ in
-            let readingDate = try? dateManager.formattedDate()
-            dispatchGroup.enter()
-            requester.fecth(for: language.rawValue, in: readingDate ?? "") { result in
-                switch result {
-                case .success(let reading):
-                    self.fileManager.write(data: reading, languageFolder: language, filename: reading.date ?? "")
-                case .failure(let error):
-                    print(error.localizedDescription)
-                    
+    func download(from promises: [ReadingPromise]) -> Promise<Void> {
+        return Promise { seal in
+            var mainPromise = Promise()
+            
+            for readingPromise in promises {
+                mainPromise = mainPromise.then { _ in
+                    readingPromise.promise.then { reading -> Promise<Void> in
+                        if let date = reading.date {
+                            self.fileManager.write(data: reading, languageFolder: readingPromise.language, filename: date)
+                        }
+                        return Promise { seal in
+                            seal.fulfill(Void())
+                        }
+                    }
                 }
-                self.dispatchGroup.leave()
             }
-            dateManager.next()
-        }
-        
-        dispatchGroup.notify(queue: .main) { [weak self] in
-            self?.dateManager.reset()
-            completion()
+            mainPromise.done { _ in
+                seal.fulfill(Void())
+            }.catch { error in
+                seal.reject(error)
+            }
         }
     }
 }
