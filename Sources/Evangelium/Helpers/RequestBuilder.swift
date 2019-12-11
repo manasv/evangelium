@@ -24,9 +24,10 @@ class ReadingsRequestBuilder: RequestBuilderProtocol {
     func createPromises(for language: Language) throws -> [ReadingPromise] {
         do {
             var promises = [ReadingPromise]()
-            let readingDate = try dateManager.formattedDate()
             
             for _ in 0 ..< 7 {
+                let readingDate = try dateManager.formattedDate()
+                
                 let promise = requester.fetch(for: language.rawValue, in: readingDate)
                 let readingPromise = ReadingPromise(promise: promise, language: language)
                 
