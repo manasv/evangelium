@@ -22,27 +22,17 @@ class FileFetcher: FileFetcherProtocol {
         self.fileManager = fileManager
     }
     
-    func download(from promises: [ReadingPromise]) -> Promise<Void> {
-        return Promise { seal in
-            var mainPromise = Promise()
-            
-            for readingPromise in promises {
-                mainPromise = mainPromise.then { _ in
-                    readingPromise.promise.then { reading -> Promise<Void> in
-                        if let date = reading.date {
-                            self.fileManager.write(data: reading, languageFolder: readingPromise.language, filename: date)
-                        }
-                        return Promise { seal in
-                            seal.fulfill(Void())
-                        }
-                    }
+    func download(from readingPromises: [ReadingPromise]) -> Promise<Void> {
+        let promises = readingPromises.map { readingPromise in
+            readingPromise.promise.then { readingData -> Promise<Void> in
+                guard let date = readingData.date else {
+                    throw PMKError.badInput
                 }
-            }
-            mainPromise.done { _ in
-                seal.fulfill(Void())
-            }.catch { error in
-                seal.reject(error)
+                return self.fileManager.write(data: readingData,
+                                               languageFolder: readingPromise.language, filename: date)
             }
         }
+        
+        return when(fulfilled: promises)
     }
 }

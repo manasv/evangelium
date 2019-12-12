@@ -22,7 +22,7 @@ for language in languages {
 fileFetcher.download(from: readingPromises).done {
     exit(0)
 }.catch { error in
-    print(error.localizedDescription)
+    print(error)
 }
 
 RunLoop.main.run()
