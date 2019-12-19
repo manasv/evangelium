@@ -28,7 +28,7 @@ jobs:
             git add data
             git commit --allow-empty -m "Updated Via CircleCI -- Automated"
             # Push quietly to prevent showing the token in log
-            git push -q https://${EVANGELIUM_KEY}@github.com/manasv/Evangelium.git api-data          
+            git push -q https://${EVANGELIUM_KEY}@github.com/manasv/Evangelium.git api-data
 workflows:
   version: 2
 
