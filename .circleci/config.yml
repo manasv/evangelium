@@ -13,7 +13,7 @@ jobs:
       - checkout
       - run: 
           name: Run code
-          command: swift run
+          command: swift run Evangelium ${API_ENDPOINT}
       - run:
           name: Copy new data to API Repo Folder
           command: |
@@ -28,13 +28,7 @@ jobs:
             git add data
             git commit --allow-empty -m "Updated Via CircleCI -- Automated"
             # Push quietly to prevent showing the token in log
-            git push -q https://${EVANGELIUM_KEY}@github.com/manasv/Evangelium.git api-data
-      - run:
-          name: Upload Coverage
-          working_directory: ~/workdir
-          command: |
-            apk update && apk add curl curl-dev bash
-            bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}          
+            git push -q https://${EVANGELIUM_KEY}@github.com/manasv/Evangelium.git api-data          
 workflows:
   version: 2
 
