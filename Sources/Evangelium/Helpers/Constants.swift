@@ -8,5 +8,5 @@
 import Foundation
 
 struct Constants {
-    static let baseURL = "https://publication.evangelizo.ws"
+    static let baseURL = CommandLine.arguments[1]
 }
