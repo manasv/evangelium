@@ -8,10 +8,10 @@
 import Foundation
 
 struct SwiftyReading: Codable {
-    let firstReading: Reading
-    let psalm: Reading
+    let firstReading: Reading?
+    let psalm: Reading?
     let secondReading: Reading?
-    let gospel: Reading
+    let gospel: Reading?
     let date: String
     
     enum CodingKeys: String, CodingKey {
@@ -20,7 +20,7 @@ struct SwiftyReading: Codable {
         case psalm, gospel, date
     }
     
-    init(firstReading: Reading, psalm: Reading, secondReading: Reading? = nil, gospel: Reading, date: String) {
+    init(firstReading: Reading? = nil, psalm: Reading? = nil, secondReading: Reading? = nil, gospel: Reading? = nil, date: String) {
         self.firstReading = firstReading
         self.psalm = psalm
         self.secondReading = secondReading
