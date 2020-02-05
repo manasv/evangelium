@@ -9,4 +9,5 @@ import Foundation
 
 enum CustomError: String, Error {
     case urlBuildError = "Error while building the URL"
+    case invalidDate = "Invalid or non existing date"
 }
