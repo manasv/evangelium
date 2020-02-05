@@ -27,28 +27,14 @@ struct FileManager {
                 
                 let file = try langFolder.createFile(named: "\(filename).json")
                 
-                if readings.data.count == 4 {
-                    let swiftyReadings = SwiftyReading(
-                        firstReading: readings.data[0],
-                        psalm: readings.data[1],
-                        secondReading: readings.data[2],
-                        gospel: readings.data[3],
-                        date: readings.date ?? "Invalid Date"
-                    )
-                    
-                    let encondedData = try encoder.encode(swiftyReadings)
-                    try file.write(encondedData)
-                } else {
-                    let swiftyReadings = SwiftyReading(
-                        firstReading: readings.data[0],
-                        psalm: readings.data[1],
-                        gospel: readings.data[2],
-                        date: readings.date ?? "Invalid Date"
-                    )
-                    
-                    let encondedData = try encoder.encode(swiftyReadings)
-                    try file.write(encondedData)
+                guard let date = readings.date else {
+                    seal.reject(CustomError.invalidDate)
                 }
+                
+                let swiftyReading = ReadingFactory.create(from: readings.data, with: date)
+                
+                let encondedData = try encoder.encode(swiftyReading)
+                try file.write(encondedData)
                 
                 seal.fulfill(())
             } catch {
