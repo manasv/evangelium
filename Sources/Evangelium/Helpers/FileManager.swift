@@ -29,6 +29,7 @@ struct FileManager {
                 
                 guard let date = readings.date else {
                     seal.reject(CustomError.invalidDate)
+                    return
                 }
                 
                 let swiftyReading = ReadingFactory.create(from: readings.data, with: date)
