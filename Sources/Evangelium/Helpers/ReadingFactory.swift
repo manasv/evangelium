@@ -9,9 +9,9 @@ import Foundation
 
 enum ReadingFactory {
     static func create(from todayReadings: [Reading], with date: String) throws -> SwiftyReading {
-        let readings = todayReadings.filter { reading in reading.type == "reading" }
-        let psalm = todayReadings.filter { reading in reading.type == "psalm" }.first
-        let gospel = todayReadings.filter { reading in reading.type == "gospel" }.first
+        let readings = todayReadings.filter { reading in reading.type == .reading }
+        let psalm = todayReadings.filter { reading in reading.type == .psalm }.first
+        let gospel = todayReadings.filter { reading in reading.type == .gospel }.first
         let numberOfReadings = readings.count
         
         switch  numberOfReadings {
@@ -24,7 +24,7 @@ enum ReadingFactory {
                 date: date
             )
         case 1:
-            if readings.count == 1, todayReadings.first?.type == "reading" {
+            if readings.count == 1, todayReadings.first?.type == .some(.reading) {
                 return SwiftyReading(
                     firstReading: readings.first,
                     psalm: psalm,
