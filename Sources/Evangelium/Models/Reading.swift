@@ -16,11 +16,17 @@ struct Reading: Codable {
     let title: String
     let referenceDisplayed: String
     let readingText: String
-    let type: String
+    let type: ReadingType
     
     enum CodingKeys: String, CodingKey {
         case referenceDisplayed = "reference_displayed"
         case readingText = "text"
         case title, type
     }
+}
+
+enum ReadingType: String, Codable {
+    case reading
+    case psalm
+    case gospel
 }
