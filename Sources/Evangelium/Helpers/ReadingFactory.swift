@@ -24,23 +24,13 @@ enum ReadingFactory {
                 date: date
             )
         case 1:
-            if readings.count == 1, todayReadings.first?.type == .some(.reading) {
-                return SwiftyReading(
-                    firstReading: readings.first,
-                    psalm: psalm,
-                    secondReading: nil,
-                    gospel: gospel,
-                    date: date
-                )
-            } else {
-                return SwiftyReading(
-                    firstReading: nil,
-                    psalm: psalm,
-                    secondReading: readings.first,
-                    gospel: gospel,
-                    date: date
-                )
-            }
+            return SwiftyReading(
+                firstReading: todayReadings.first?.type == .some(.reading) ? readings.first : nil,
+                psalm: psalm,
+                secondReading: todayReadings.first?.type != .some(.reading) ? readings.first : nil,
+                gospel: gospel,
+                date: date
+            )
         case 0:
             return SwiftyReading(
                 firstReading: nil,
