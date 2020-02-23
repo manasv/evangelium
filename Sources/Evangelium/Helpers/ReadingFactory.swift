@@ -7,46 +7,50 @@
 
 import Foundation
 
-struct ReadingFactory {
-    static func create(from todayReadings: [Reading], with date: String) -> SwiftyReading{
+enum ReadingFactory {
+    static func create(from todayReadings: [Reading], with date: String) throws -> SwiftyReading {
         let readings = todayReadings.filter { reading in reading.type == "reading" }
-        let psalm = todayReadings.filter { reading in reading.type == "psalm" }
-        let gospel = todayReadings.filter { reading in reading.type == "gospel" }
+        let psalm = todayReadings.filter { reading in reading.type == "psalm" }.first
+        let gospel = todayReadings.filter { reading in reading.type == "gospel" }.first
+        let numberOfReadings = readings.count
         
-        if readings.count == 2 {
+        switch  numberOfReadings {
+        case 2:
             return SwiftyReading(
                 firstReading: readings.first,
-                psalm: !psalm.isEmpty ? psalm.first : nil,
+                psalm: psalm,
                 secondReading: readings.last,
-                gospel: !gospel.isEmpty ? gospel.first : nil,
+                gospel: gospel,
                 date: date
             )
-        } else if readings.count == 1, todayReadings.first?.type == "reading"{
-            return SwiftyReading(
-                firstReading: readings.first,
-                psalm: !psalm.isEmpty ? psalm.first : nil,
-                secondReading: nil,
-                gospel: !gospel.isEmpty ? gospel.first : nil,
-                date: date
-            )
-        } else if readings.count == 1, todayReadings.first?.type != "reading"{
+        case 1:
+            if readings.count == 1, todayReadings.first?.type == "reading" {
+                return SwiftyReading(
+                    firstReading: readings.first,
+                    psalm: psalm,
+                    secondReading: nil,
+                    gospel: gospel,
+                    date: date
+                )
+            } else {
+                return SwiftyReading(
+                    firstReading: nil,
+                    psalm: psalm,
+                    secondReading: readings.first,
+                    gospel: gospel,
+                    date: date
+                )
+            }
+        case 0:
             return SwiftyReading(
                 firstReading: nil,
-                psalm: !psalm.isEmpty ? psalm.first : nil,
-                secondReading: readings.first,
-                gospel: !gospel.isEmpty ? gospel.first : nil,
-                date: date
-            )
-        } else if readings.count == 0 {
-            return SwiftyReading(
-                firstReading: nil,
-                psalm: !psalm.isEmpty ? psalm.first : nil,
+                psalm: psalm,
                 secondReading: nil,
-                gospel: !gospel.isEmpty ? gospel.first : nil,
+                gospel: gospel,
                 date: date
             )
+        default:
+            throw CustomError.invalidReadings
         }
-        
-        return SwiftyReading(date: "Invalid")
     }
 }
