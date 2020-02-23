@@ -19,12 +19,4 @@ struct SwiftyReading: Codable {
         case secondReading = "second_reading"
         case psalm, gospel, date
     }
-    
-    init(firstReading: Reading? = nil, psalm: Reading? = nil, secondReading: Reading? = nil, gospel: Reading? = nil, date: String) {
-        self.firstReading = firstReading
-        self.psalm = psalm
-        self.secondReading = secondReading
-        self.gospel = gospel
-        self.date = date
-    }
 }
