@@ -32,7 +32,7 @@ struct FileManager {
                     return
                 }
                 
-                let swiftyReading = ReadingFactory.create(from: readings.data, with: date)
+                let swiftyReading = try ReadingFactory.create(from: readings.data, with: date)
                 
                 let encondedData = try encoder.encode(swiftyReading)
                 try file.write(encondedData)
