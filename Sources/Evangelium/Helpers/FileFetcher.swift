@@ -28,8 +28,7 @@ class FileFetcher: FileFetcherProtocol {
                 guard let date = readingData.date else {
                     throw PMKError.badInput
                 }
-                return self.fileManager.write(data: readingData,
-                                               languageFolder: readingPromise.language, filename: date)
+                return self.fileManager.write(data: readingData, languageFolder: readingPromise.language, filename: date)
             }
         }
         
