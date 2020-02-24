@@ -42,10 +42,7 @@ workflows:
                 - master
     jobs:
       - build
+
   new_push_build:
     jobs:
-      - build:
-        filters:
-            branches:
-              only:
-                - master
+      - build
