@@ -46,9 +46,8 @@ workflows:
   new_push_build:
     jobs:
       - build:
-        filters:
-          branches:
-            only:
-             - master
-             - develop
+        branches:
+          only:
+            - master
+            - develop
 
