@@ -45,4 +45,10 @@ workflows:
 
   new_push_build:
     jobs:
-      - build
+      - build:
+        filters:
+          branches:
+            only:
+             - master
+             - develop
+
