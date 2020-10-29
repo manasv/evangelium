@@ -8,11 +8,11 @@
 import Foundation
 import PromiseKit
 
-protocol RequestBuilderProtocol {
+protocol RequestBuilderType {
     func createPromises(for language: Language) throws -> [ReadingPromise]
 }
 
-class ReadingsRequestBuilder: RequestBuilderProtocol {
+class ReadingsRequestBuilder: RequestBuilderType {
     var dateManager: DateManager
     var requester: ReadingRequester
     

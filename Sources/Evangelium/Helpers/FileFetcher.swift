@@ -7,11 +7,11 @@
 import Foundation
 import PromiseKit
 
-protocol FileFetcherProtocol {
+protocol FileFetcherType {
     func download(from promises: [ReadingPromise]) -> Promise<Void>
 }
 
-class FileFetcher: FileFetcherProtocol {
+class FileFetcher: FileFetcherType {
     var dateManager: DateManager
     let requester: ReadingRequester
     let fileManager: FileManager

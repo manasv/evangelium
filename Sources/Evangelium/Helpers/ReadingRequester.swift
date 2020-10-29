@@ -8,11 +8,11 @@
 import Foundation
 import PromiseKit
 
-protocol RequesterProtocol {
+protocol RequesterType {
     func fetch(for language: String, in date: String) -> Promise<ReadingsData>
 }
 
-public struct ReadingRequester: RequesterProtocol {
+public struct ReadingRequester: RequesterType {
     func fetch(for language: String, in date: String) -> Promise<ReadingsData> {
         return Promise { seal in
             let decoder = JSONDecoder()
