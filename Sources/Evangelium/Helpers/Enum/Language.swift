@@ -8,19 +8,19 @@
 import Foundation
 
 enum Language: String, CaseIterable {
-    case sp = "sp"
-    case am = "am"
-    case it = "it"
-    case fr = "fr"
-    case de = "de"
-    case kr = "kr"
-    case pt = "pt"
+    case spanish = "sp"
+    case english = "am"
+    case italian = "it"
+    case french = "fr"
+    case german = "de"
+    case korean = "kr"
+    case portuguese = "pt"
     
     var folderName: String {
         switch self {
-        case .sp:
+        case .spanish:
             return "es"
-        case .am:
+        case .english:
             return "en"
         default:
             return rawValue
